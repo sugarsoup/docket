@@ -4,18 +4,18 @@ import (
 	"context"
 	"testing"
 
-	"protograph/pkg/protograph"
-	pb "protograph/proto/examples/batch"
+	"docket/pkg/docket"
+	pb "docket/proto/examples/batch"
 )
 
 func TestBatchLogic(t *testing.T) {
 	// Setup graph
-	g := protograph.NewGraph()
-	
-	if err := g.RegisterAggregate(ComputeBatchStats, protograph.WithName("ComputeBatchStats")); err != nil {
+	g := docket.NewGraph()
+
+	if err := g.RegisterAggregate(ComputeBatchStats, docket.WithName("ComputeBatchStats")); err != nil {
 		t.Fatalf("RegisterAggregate failed: %v", err)
 	}
-	if err := g.Register(EnrichMovie, protograph.WithName("EnrichMovie")); err != nil {
+	if err := g.Register(EnrichMovie, docket.WithName("EnrichMovie")); err != nil {
 		t.Fatalf("Register failed: %v", err)
 	}
 	if err := g.Validate(); err != nil {
@@ -31,7 +31,7 @@ func TestBatchLogic(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	results, err := protograph.ExecuteBatch[*pb.Movie, *pb.EnrichedMovie](ctx, g, "test-batch", movies)
+	results, err := docket.ExecuteBatch[*pb.Movie, *pb.EnrichedMovie](ctx, g, "test-batch", movies)
 	if err != nil {
 		t.Fatalf("ExecuteBatch failed: %v", err)
 	}

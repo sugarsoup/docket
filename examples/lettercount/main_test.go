@@ -4,16 +4,16 @@ import (
 	"context"
 	"testing"
 
-	"protograph/pkg/protograph"
-	pb "protograph/proto/examples/lettercount"
+	"docket/pkg/docket"
+	pb "docket/proto/examples/lettercount"
 )
 
 func TestLetterCountLogic(t *testing.T) {
 	// Setup the graph exactly as main() does
-	g := protograph.NewGraph()
+	g := docket.NewGraph()
 	err := g.Register(
 		CountLetterR,
-		protograph.WithName("CountLetterR"),
+		docket.WithName("CountLetterR"),
 	)
 	if err != nil {
 		t.Fatalf("Failed to register step: %v", err)
@@ -39,7 +39,7 @@ func TestLetterCountLogic(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.input, func(t *testing.T) {
 			input := &pb.InputString{Value: tt.input}
-			result, err := protograph.Execute[*pb.LetterCount](ctx, g, "test-"+tt.input, input)
+			result, err := docket.Execute[*pb.LetterCount](ctx, g, "test-"+tt.input, input)
 			if err != nil {
 				t.Fatalf("Execution failed: %v", err)
 			}

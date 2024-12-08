@@ -6,8 +6,8 @@ import (
 	"log"
 	"time"
 
-	"protograph/pkg/protograph"
-	pb "protograph/proto/examples/lettercount"
+	"docket/pkg/docket"
+	pb "docket/proto/examples/lettercount"
 )
 
 func main() {
@@ -17,17 +17,17 @@ func main() {
 	// import _ "github.com/mattn/go-sqlite3"
 	//
 	// db, _ := sql.Open("sqlite3", "cache.db")
-	// store := protograph.NewSQLStore(db, "step_cache", protograph.DialectSQLite)
+	// store := docket.NewSQLStore(db, "step_cache", docket.DialectSQLite)
 	// if err := store.InitSchema(context.Background()); err != nil {
 	//     panic(err)
 	// }
 
 	// For this example, we use in-memory storage:
-	store := protograph.NewInMemoryStore()
+	store := docket.NewInMemoryStore()
 	fmt.Println("Store initialized (In-Memory)")
 
 	// 2. Define Graph
-	g := protograph.NewGraph()
+	g := docket.NewGraph()
 
 	// 3. Register a "slow" step with caching
 	// We use ScopeGlobal so the result is shared across different execution IDs.
@@ -38,8 +38,8 @@ func main() {
 			time.Sleep(500 * time.Millisecond)
 			return &pb.LetterCount{Count: int32(len(input.Value))}, nil
 		},
-		protograph.WithName("SlowCount"),
-		protograph.WithPersistence(store, protograph.ScopeGlobal, 1*time.Minute),
+		docket.WithName("SlowCount"),
+		docket.WithPersistence(store, docket.ScopeGlobal, 1*time.Minute),
 	)
 
 	if err := g.Validate(); err != nil {
@@ -52,7 +52,7 @@ func main() {
 	// 4. First Execution: Cache Miss
 	fmt.Println("\n--- Run 1 (Cold Cache) ---")
 	start := time.Now()
-	result1, err := protograph.Execute[*pb.LetterCount](ctx, g, "exec-001", input)
+	result1, err := docket.Execute[*pb.LetterCount](ctx, g, "exec-001", input)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -63,7 +63,7 @@ func main() {
 	// Different execution ID, but same input + ScopeGlobal = Hit
 	fmt.Println("\n--- Run 2 (Warm Cache) ---")
 	start = time.Now()
-	result2, err := protograph.Execute[*pb.LetterCount](ctx, g, "exec-002", input)
+	result2, err := docket.Execute[*pb.LetterCount](ctx, g, "exec-002", input)
 	if err != nil {
 		log.Fatal(err)
 	}

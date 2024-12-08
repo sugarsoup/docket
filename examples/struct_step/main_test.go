@@ -4,19 +4,19 @@ import (
 	"context"
 	"testing"
 
-	"protograph/pkg/protograph"
-	pb "protograph/proto/examples/lettercount"
+	"docket/pkg/docket"
+	pb "docket/proto/examples/lettercount"
 )
 
 func TestConfigurableStep(t *testing.T) {
-	g := protograph.NewGraph()
+	g := docket.NewGraph()
 
 	counter := &LetterCounter{
 		TargetLetter:  "e",
 		CaseSensitive: false,
 	}
 
-	if err := g.Register(counter, protograph.WithName("CountE")); err != nil {
+	if err := g.Register(counter, docket.WithName("CountE")); err != nil {
 		t.Fatalf("Register failed: %v", err)
 	}
 	if err := g.Validate(); err != nil {
@@ -24,7 +24,7 @@ func TestConfigurableStep(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	result, err := protograph.Execute[*pb.LetterCount](ctx, g, "test-conf", &pb.InputString{Value: "Excellence"})
+	result, err := docket.Execute[*pb.LetterCount](ctx, g, "test-conf", &pb.InputString{Value: "Excellence"})
 	if err != nil {
 		t.Fatalf("Execute failed: %v", err)
 	}
@@ -35,7 +35,7 @@ func TestConfigurableStep(t *testing.T) {
 }
 
 func TestDependencyInjection(t *testing.T) {
-	g := protograph.NewGraph()
+	g := docket.NewGraph()
 
 	client := &APIClient{BaseURL: "https://mock.api"}
 	scorer := &WordScorer{
@@ -43,7 +43,7 @@ func TestDependencyInjection(t *testing.T) {
 		Prefix: "test:",
 	}
 
-	if err := g.Register(scorer, protograph.WithName("ScoreWord")); err != nil {
+	if err := g.Register(scorer, docket.WithName("ScoreWord")); err != nil {
 		t.Fatalf("Register failed: %v", err)
 	}
 	if err := g.Validate(); err != nil {
@@ -51,7 +51,7 @@ func TestDependencyInjection(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	result, err := protograph.Execute[*pb.LetterCount](ctx, g, "test-di", &pb.InputString{Value: "abc"})
+	result, err := docket.Execute[*pb.LetterCount](ctx, g, "test-di", &pb.InputString{Value: "abc"})
 	if err != nil {
 		t.Fatalf("Execute failed: %v", err)
 	}

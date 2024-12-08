@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package protograph.examples.lettercount;
+package docket.examples.lettercount;
 
-option go_package = "protograph/proto/examples/lettercount";
+option go_package = "docket/proto/examples/lettercount";
 
 // InputString is a leaf input proto containing the string to analyze
 message InputString {

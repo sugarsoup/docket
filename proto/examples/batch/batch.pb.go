@@ -331,12 +331,12 @@ func file_proto_examples_batch_batch_proto_rawDescGZIP() []byte {
 
 var file_proto_examples_batch_batch_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
 var file_proto_examples_batch_batch_proto_goTypes = []interface{}{
-	(*Movie)(nil),         // 0: protograph.examples.batch.Movie
-	(*EnrichedMovie)(nil), // 1: protograph.examples.batch.EnrichedMovie
-	(*BatchStats)(nil),    // 2: protograph.examples.batch.BatchStats
+	(*Movie)(nil),         // 0: docket.examples.batch.Movie
+	(*EnrichedMovie)(nil), // 1: docket.examples.batch.EnrichedMovie
+	(*BatchStats)(nil),    // 2: docket.examples.batch.BatchStats
 }
 var file_proto_examples_batch_batch_proto_depIdxs = []int32{
-	0, // 0: protograph.examples.batch.EnrichedMovie.original:type_name -> protograph.examples.batch.Movie
+	0, // 0: docket.examples.batch.EnrichedMovie.original:type_name -> docket.examples.batch.Movie
 	1, // [1:1] is the sub-list for method output_type
 	1, // [1:1] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name

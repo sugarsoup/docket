@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package protograph.examples.parallel;
+package docket.examples.parallel;
 
-option go_package = "protograph/proto/examples/parallel";
+option go_package = "docket/proto/examples/parallel";
 
 // UserID is the leaf input - a user to look up
 message UserID {

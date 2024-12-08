@@ -385,16 +385,16 @@ func file_proto_examples_parallel_parallel_proto_rawDescGZIP() []byte {
 
 var file_proto_examples_parallel_parallel_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_proto_examples_parallel_parallel_proto_goTypes = []interface{}{
-	(*UserID)(nil),          // 0: protograph.examples.parallel.UserID
-	(*UserProfile)(nil),     // 1: protograph.examples.parallel.UserProfile
-	(*UserPreferences)(nil), // 2: protograph.examples.parallel.UserPreferences
-	(*UserActivity)(nil),    // 3: protograph.examples.parallel.UserActivity
-	(*EnrichedUser)(nil),    // 4: protograph.examples.parallel.EnrichedUser
+	(*UserID)(nil),          // 0: docket.examples.parallel.UserID
+	(*UserProfile)(nil),     // 1: docket.examples.parallel.UserProfile
+	(*UserPreferences)(nil), // 2: docket.examples.parallel.UserPreferences
+	(*UserActivity)(nil),    // 3: docket.examples.parallel.UserActivity
+	(*EnrichedUser)(nil),    // 4: docket.examples.parallel.EnrichedUser
 }
 var file_proto_examples_parallel_parallel_proto_depIdxs = []int32{
-	1, // 0: protograph.examples.parallel.EnrichedUser.profile:type_name -> protograph.examples.parallel.UserProfile
-	2, // 1: protograph.examples.parallel.EnrichedUser.preferences:type_name -> protograph.examples.parallel.UserPreferences
-	3, // 2: protograph.examples.parallel.EnrichedUser.activity:type_name -> protograph.examples.parallel.UserActivity
+	1, // 0: docket.examples.parallel.EnrichedUser.profile:type_name -> docket.examples.parallel.UserProfile
+	2, // 1: docket.examples.parallel.EnrichedUser.preferences:type_name -> docket.examples.parallel.UserPreferences
+	3, // 2: docket.examples.parallel.EnrichedUser.activity:type_name -> docket.examples.parallel.UserActivity
 	3, // [3:3] is the sub-list for method output_type
 	3, // [3:3] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name

@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package protograph;
+package docket;
 
-option go_package = "protograph/proto/framework";
+option go_package = "docket/proto/framework";
 
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/any.proto";

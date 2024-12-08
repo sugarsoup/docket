@@ -6,12 +6,12 @@ import (
 	"testing"
 	"time"
 
-	"protograph/pkg/protograph"
-	pb "protograph/proto/examples/lettercount"
+	"docket/pkg/docket"
+	pb "docket/proto/examples/lettercount"
 )
 
 func TestTimeoutLogic(t *testing.T) {
-	g := protograph.NewGraph()
+	g := docket.NewGraph()
 
 	// Step that takes longer than timeout
 	err := g.Register(
@@ -23,7 +23,7 @@ func TestTimeoutLogic(t *testing.T) {
 				return nil, ctx.Err()
 			}
 		},
-		protograph.WithTimeout(10*time.Millisecond),
+		docket.WithTimeout(10*time.Millisecond),
 	)
 	if err != nil {
 		t.Fatalf("Register failed: %v", err)
@@ -34,7 +34,7 @@ func TestTimeoutLogic(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	_, err = protograph.Execute[*pb.LetterCount](ctx, g, "test-timeout", &pb.InputString{Value: "test"})
+	_, err = docket.Execute[*pb.LetterCount](ctx, g, "test-timeout", &pb.InputString{Value: "test"})
 
 	if err == nil {
 		t.Error("expected timeout error, got nil")

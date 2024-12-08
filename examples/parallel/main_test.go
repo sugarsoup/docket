@@ -5,12 +5,12 @@ import (
 	"testing"
 	"time"
 
-	"protograph/pkg/protograph"
-	pb "protograph/proto/examples/parallel"
+	"docket/pkg/docket"
+	pb "docket/proto/examples/parallel"
 )
 
 func TestParallelLogic(t *testing.T) {
-	g := protograph.NewGraph()
+	g := docket.NewGraph()
 
 	// Step 1
 	g.Register(func(ctx context.Context, id *pb.UserID) (*pb.UserProfile, error) {
@@ -35,7 +35,7 @@ func TestParallelLogic(t *testing.T) {
 
 	ctx := context.Background()
 	start := time.Now()
-	result, err := protograph.Execute[*pb.EnrichedUser](ctx, g, "test-parallel", &pb.UserID{Id: "1"})
+	result, err := docket.Execute[*pb.EnrichedUser](ctx, g, "test-parallel", &pb.UserID{Id: "1"})
 	elapsed := time.Since(start)
 
 	if err != nil {

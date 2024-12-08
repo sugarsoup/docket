@@ -6,23 +6,23 @@ import (
 	"log"
 	"time"
 
-	"protograph/pkg/protograph"
-	pb "protograph/proto/examples/lettercount"
+	"docket/pkg/docket"
+	pb "docket/proto/examples/lettercount"
 )
 
 func main() {
-	fmt.Println("=== Protograph Letter Counting Example ===")
+	fmt.Println("=== Docket Letter Counting Example ===")
 	fmt.Println()
 
 	// ============ SETUP PHASE (not timed) ============
 
-	g := protograph.NewGraph()
+	g := docket.NewGraph()
 
 	// Register the step using a named function
 	// The function signature declares: output type (*pb.LetterCount) and dependencies (*pb.InputString)
 	err := g.Register(
 		CountLetterR, // Named function from steps.go
-		protograph.WithName("CountLetterR"),
+		docket.WithName("CountLetterR"),
 	)
 	if err != nil {
 		log.Fatalf("Failed to register step: %v", err)
@@ -42,7 +42,7 @@ func main() {
 	// ============ FUNCTIONAL TEST ============
 
 	fmt.Println("📋 Functional Test:")
-	result, err := protograph.Execute[*pb.LetterCount](ctx, g, "test-001", input)
+	result, err := docket.Execute[*pb.LetterCount](ctx, g, "test-001", input)
 	if err != nil {
 		log.Fatalf("Execution failed: %v", err)
 	}
@@ -73,10 +73,10 @@ func main() {
 		}
 		plainDuration := time.Since(startPlain)
 
-		// Benchmark protograph
+		// Benchmark docket
 		startGraph := time.Now()
 		for i := 0; i < n; i++ {
-			_, _ = protograph.Execute[*pb.LetterCount](ctx, g, fmt.Sprintf("perf-%d", i), input)
+			_, _ = docket.Execute[*pb.LetterCount](ctx, g, fmt.Sprintf("perf-%d", i), input)
 		}
 		graphDuration := time.Since(startGraph)
 
@@ -86,7 +86,7 @@ func main() {
 		graphPerOp := graphDuration / time.Duration(n)
 
 		fmt.Printf("    Plain Go:    %v total, %v/op\n", plainDuration, plainPerOp)
-		fmt.Printf("    Protograph:  %v total, %v/op\n", graphDuration, graphPerOp)
+		fmt.Printf("    Docket:  %v total, %v/op\n", graphDuration, graphPerOp)
 		fmt.Printf("    Overhead:    %.2fx\n", overhead)
 		fmt.Println()
 	}

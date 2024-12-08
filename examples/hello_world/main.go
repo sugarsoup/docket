@@ -5,6 +5,6 @@ import (
 )
 
 func main() {
-	fmt.Println("Hello from Protograph!")
+	fmt.Println("Hello from Docket!")
 	fmt.Println("See examples/lettercount for a full working example.")
 }

@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package protograph.examples.batch;
+package docket.examples.batch;
 
-option go_package = "protograph/proto/examples/batch";
+option go_package = "docket/proto/examples/batch";
 
 // Movie represents a single movie in the batch
 message Movie {

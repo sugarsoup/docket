@@ -1,6 +1,24 @@
-docs/
-CLAUDE.md
-coverage.html
-coverage.out
-*.test
+# Binaries
 build/
+*.exe
+*.test
+
+# Go artifacts
+coverage.out
+coverage.html
+go.sum
+
+# IDE settings
+.vscode/
+.idea/
+.cursor/
+
+# OS specific
+.DS_Store
+
+# Temporary files
+*.tmp
+*.log
+*.db
+*.sqlite
+docs/

@@ -1,6 +1,6 @@
 // Example: Parallel Dependency Resolution
 //
-// This example demonstrates how protograph automatically resolves
+// This example demonstrates how docket automatically resolves
 // independent dependencies in parallel, reducing total execution time.
 package main
 
@@ -11,8 +11,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"protograph/pkg/protograph"
-	pb "protograph/proto/examples/parallel"
+	"docket/pkg/docket"
+	pb "docket/proto/examples/parallel"
 )
 
 // Track concurrent execution for demonstration
@@ -35,7 +35,7 @@ func trackConcurrency(name string) func() {
 }
 
 func main() {
-	fmt.Println("=== Protograph Parallel Dependency Resolution ===")
+	fmt.Println("=== Docket Parallel Dependency Resolution ===")
 	fmt.Println()
 	fmt.Println("This example demonstrates parallel execution of independent steps.")
 	fmt.Println()
@@ -44,7 +44,7 @@ func main() {
 }
 
 func runParallelExample() {
-	g := protograph.NewGraph()
+	g := docket.NewGraph()
 
 	// Step 1: Fetch user profile (100ms latency)
 	g.Register(
@@ -59,7 +59,7 @@ func runParallelExample() {
 				Email: "alice@example.com",
 			}, nil
 		},
-		protograph.WithName("FetchProfile"),
+		docket.WithName("FetchProfile"),
 	)
 
 	// Step 2: Fetch user preferences (100ms latency) - INDEPENDENT of profile
@@ -75,7 +75,7 @@ func runParallelExample() {
 				Language: "en",
 			}, nil
 		},
-		protograph.WithName("FetchPreferences"),
+		docket.WithName("FetchPreferences"),
 	)
 
 	// Step 3: Fetch user activity (100ms latency) - INDEPENDENT of profile and preferences
@@ -91,7 +91,7 @@ func runParallelExample() {
 				LastLoginTimestamp: time.Now().Unix(),
 			}, nil
 		},
-		protograph.WithName("FetchActivity"),
+		docket.WithName("FetchActivity"),
 	)
 
 	// Step 4: Combine all data (depends on all three above)
@@ -106,7 +106,7 @@ func runParallelExample() {
 				Activity:    activity,
 			}, nil
 		},
-		protograph.WithName("EnrichUser"),
+		docket.WithName("EnrichUser"),
 	)
 
 	if err := g.Validate(); err != nil {
@@ -126,7 +126,7 @@ func runParallelExample() {
 	ctx := context.Background()
 	start := time.Now()
 
-	result, err := protograph.Execute[*pb.EnrichedUser](ctx, g, "parallel-001", &pb.UserID{Id: "user-123"})
+	result, err := docket.Execute[*pb.EnrichedUser](ctx, g, "parallel-001", &pb.UserID{Id: "user-123"})
 	if err != nil {
 		log.Fatalf("Execution failed: %v", err)
 	}

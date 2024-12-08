@@ -169,8 +169,8 @@ func file_proto_examples_lettercount_lettercount_proto_rawDescGZIP() []byte {
 
 var file_proto_examples_lettercount_lettercount_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_proto_examples_lettercount_lettercount_proto_goTypes = []interface{}{
-	(*InputString)(nil), // 0: protograph.examples.lettercount.InputString
-	(*LetterCount)(nil), // 1: protograph.examples.lettercount.LetterCount
+	(*InputString)(nil), // 0: docket.examples.lettercount.InputString
+	(*LetterCount)(nil), // 1: docket.examples.lettercount.LetterCount
 }
 var file_proto_examples_lettercount_lettercount_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type

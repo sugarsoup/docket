@@ -13,8 +13,8 @@ import (
 	"log"
 	"strings"
 
-	"protograph/pkg/protograph"
-	pb "protograph/proto/examples/lettercount"
+	"docket/pkg/docket"
+	pb "docket/proto/examples/lettercount"
 )
 
 // ============ Struct-based Steps ============
@@ -74,7 +74,7 @@ func (ws *WordScorer) Compute(ctx context.Context, input *pb.InputString) (*pb.L
 }
 
 func main() {
-	fmt.Println("=== Protograph Struct Step Example ===")
+	fmt.Println("=== Docket Struct Step Example ===")
 	fmt.Println()
 	fmt.Println("This example demonstrates registering structs with Compute methods.")
 	fmt.Println()
@@ -93,7 +93,7 @@ func main() {
 }
 
 func runConfigurableStep() {
-	g := protograph.NewGraph()
+	g := docket.NewGraph()
 
 	// Create step with specific configuration
 	counter := &LetterCounter{
@@ -101,7 +101,7 @@ func runConfigurableStep() {
 		CaseSensitive: false,
 	}
 
-	err := g.Register(counter, protograph.WithName("CountE"))
+	err := g.Register(counter, docket.WithName("CountE"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -111,7 +111,7 @@ func runConfigurableStep() {
 	}
 
 	ctx := context.Background()
-	result, err := protograph.Execute[*pb.LetterCount](ctx, g, "struct-001", &pb.InputString{Value: "Excellence"})
+	result, err := docket.Execute[*pb.LetterCount](ctx, g, "struct-001", &pb.InputString{Value: "Excellence"})
 	if err != nil {
 		log.Fatalf("Execution failed: %v", err)
 	}
@@ -122,7 +122,7 @@ func runConfigurableStep() {
 }
 
 func runDependencyInjection() {
-	g := protograph.NewGraph()
+	g := docket.NewGraph()
 
 	// Create a "production" API client
 	client := &APIClient{BaseURL: "https://api.example.com"}
@@ -133,7 +133,7 @@ func runDependencyInjection() {
 		Prefix: "scored: ",
 	}
 
-	err := g.Register(scorer, protograph.WithName("ScoreWord"))
+	err := g.Register(scorer, docket.WithName("ScoreWord"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -143,12 +143,12 @@ func runDependencyInjection() {
 	}
 
 	ctx := context.Background()
-	result, err := protograph.Execute[*pb.LetterCount](ctx, g, "struct-002", &pb.InputString{Value: "protograph"})
+	result, err := docket.Execute[*pb.LetterCount](ctx, g, "struct-002", &pb.InputString{Value: "docket"})
 	if err != nil {
 		log.Fatalf("Execution failed: %v", err)
 	}
 
-	fmt.Printf("   Input: %q\n", "protograph")
+	fmt.Printf("   Input: %q\n", "docket")
 	fmt.Printf("   Output: %q with score %d\n", result.OriginalString, result.Count)
 	fmt.Println("   (In tests, you could inject a mock APIClient)")
 	fmt.Println()
@@ -158,20 +158,20 @@ func runMultipleConfigs() {
 	// Create two graphs with different configurations of the same step type
 
 	// Graph 1: Count letter 'a'
-	g1 := protograph.NewGraph()
-	g1.Register(&LetterCounter{TargetLetter: "a", CaseSensitive: true}, protograph.WithName("CountA"))
+	g1 := docket.NewGraph()
+	g1.Register(&LetterCounter{TargetLetter: "a", CaseSensitive: true}, docket.WithName("CountA"))
 	g1.Validate()
 
 	// Graph 2: Count letter 'o' (case insensitive)
-	g2 := protograph.NewGraph()
-	g2.Register(&LetterCounter{TargetLetter: "o", CaseSensitive: false}, protograph.WithName("CountO"))
+	g2 := docket.NewGraph()
+	g2.Register(&LetterCounter{TargetLetter: "o", CaseSensitive: false}, docket.WithName("CountO"))
 	g2.Validate()
 
 	ctx := context.Background()
 	input := &pb.InputString{Value: "ABRACADABRA"}
 
-	result1, _ := protograph.Execute[*pb.LetterCount](ctx, g1, "multi-001", input)
-	result2, _ := protograph.Execute[*pb.LetterCount](ctx, g2, "multi-002", input)
+	result1, _ := docket.Execute[*pb.LetterCount](ctx, g1, "multi-001", input)
+	result2, _ := docket.Execute[*pb.LetterCount](ctx, g2, "multi-002", input)
 
 	fmt.Printf("   Input: %q\n", input.Value)
 	fmt.Printf("   Count 'a' (case sensitive): %d\n", result1.Count)

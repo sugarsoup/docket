@@ -157,16 +157,16 @@ func file_proto_persistence_proto_rawDescGZIP() []byte {
 
 var file_proto_persistence_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_proto_persistence_proto_goTypes = []interface{}{
-	(*PersistenceEntry)(nil),      // 0: protograph.PersistenceEntry
-	nil,                           // 1: protograph.PersistenceEntry.MetadataEntry
+	(*PersistenceEntry)(nil),      // 0: docket.PersistenceEntry
+	nil,                           // 1: docket.PersistenceEntry.MetadataEntry
 	(*anypb.Any)(nil),             // 2: google.protobuf.Any
 	(*timestamppb.Timestamp)(nil), // 3: google.protobuf.Timestamp
 }
 var file_proto_persistence_proto_depIdxs = []int32{
-	2, // 0: protograph.PersistenceEntry.value:type_name -> google.protobuf.Any
-	3, // 1: protograph.PersistenceEntry.created_at:type_name -> google.protobuf.Timestamp
-	3, // 2: protograph.PersistenceEntry.expires_at:type_name -> google.protobuf.Timestamp
-	1, // 3: protograph.PersistenceEntry.metadata:type_name -> protograph.PersistenceEntry.MetadataEntry
+	2, // 0: docket.PersistenceEntry.value:type_name -> google.protobuf.Any
+	3, // 1: docket.PersistenceEntry.created_at:type_name -> google.protobuf.Timestamp
+	3, // 2: docket.PersistenceEntry.expires_at:type_name -> google.protobuf.Timestamp
+	1, // 3: docket.PersistenceEntry.metadata:type_name -> docket.PersistenceEntry.MetadataEntry
 	4, // [4:4] is the sub-list for method output_type
 	4, // [4:4] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name

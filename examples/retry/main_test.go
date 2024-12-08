@@ -6,12 +6,12 @@ import (
 	"testing"
 	"time"
 
-	"protograph/pkg/protograph"
-	pb "protograph/proto/examples/lettercount"
+	"docket/pkg/docket"
+	pb "docket/proto/examples/lettercount"
 )
 
 func TestRetryLogic(t *testing.T) {
-	g := protograph.NewGraph()
+	g := docket.NewGraph()
 	attempts := 0
 
 	// Step fails twice, succeeds on third attempt
@@ -23,7 +23,10 @@ func TestRetryLogic(t *testing.T) {
 			}
 			return &pb.LetterCount{Count: 1}, nil
 		},
-		protograph.WithRetry(5, protograph.FixedBackoff{Delay: 1 * time.Millisecond}),
+		docket.WithRetry(docket.RetryConfig{
+			MaxAttempts: 5,
+			Backoff:     docket.FixedBackoff{Delay: 1 * time.Millisecond},
+		}),
 	)
 	if err != nil {
 		t.Fatalf("Register failed: %v", err)
@@ -34,7 +37,7 @@ func TestRetryLogic(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	result, err := protograph.Execute[*pb.LetterCount](ctx, g, "test-retry", &pb.InputString{Value: "test"})
+	result, err := docket.Execute[*pb.LetterCount](ctx, g, "test-retry", &pb.InputString{Value: "test"})
 	if err != nil {
 		t.Fatalf("Execute failed: %v", err)
 	}

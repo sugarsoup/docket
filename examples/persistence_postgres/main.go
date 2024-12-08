@@ -9,8 +9,8 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"protograph/pkg/protograph"
-	pb "protograph/proto/examples/lettercount"
+	"docket/pkg/docket"
+	pb "docket/proto/examples/lettercount"
 )
 
 func main() {
@@ -29,7 +29,7 @@ func main() {
 	defer pool.Close()
 
 	// Use PostgresStore (native pgx)
-	store := protograph.NewPostgresStore(pool, "step_cache")
+	store := docket.NewPostgresStore(pool, "step_cache")
 	if err := store.InitSchema(context.Background()); err != nil {
 		// Just log error but continue, might fail if DB down
 		log.Printf("Failed to init schema (DB might be unreachable): %v", err)
@@ -39,7 +39,7 @@ func main() {
 	}
 
 	// 2. Setup Graph
-	g := protograph.NewGraph()
+	g := docket.NewGraph()
 
 	// Register a slow step
 	g.Register(
@@ -48,9 +48,9 @@ func main() {
 			time.Sleep(200 * time.Millisecond)
 			return &pb.LetterCount{Count: int32(len(input.Value))}, nil
 		},
-		protograph.WithName("SlowCount"),
+		docket.WithName("SlowCount"),
 		// Cache globally for 1 hour
-		protograph.WithPersistence(store, protograph.ScopeGlobal, 1*time.Hour),
+		docket.WithPersistence(store, docket.ScopeGlobal, 1*time.Hour),
 	)
 
 	if err := g.Validate(); err != nil {
@@ -63,7 +63,7 @@ func main() {
 	// 3. First Run (Cold)
 	fmt.Println("\n--- Run 1 (Cold) ---")
 	start := time.Now()
-	_, err = protograph.Execute[*pb.LetterCount](ctx, g, "exec-pg-1", input)
+	_, err = docket.Execute[*pb.LetterCount](ctx, g, "exec-pg-1", input)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -73,7 +73,7 @@ func main() {
 	// 4. Second Run (Warm)
 	fmt.Println("\n--- Run 2 (Warm) ---")
 	start = time.Now()
-	_, err = protograph.Execute[*pb.LetterCount](ctx, g, "exec-pg-2", input)
+	_, err = docket.Execute[*pb.LetterCount](ctx, g, "exec-pg-2", input)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -87,4 +87,3 @@ func main() {
 		fmt.Println("\nSUCCESS: Cache hit confirmed!")
 	}
 }
-

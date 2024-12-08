@@ -1,6 +1,6 @@
 // Example: Timeout Handling
 //
-// This example demonstrates how protograph handles step timeouts,
+// This example demonstrates how docket handles step timeouts,
 // preventing slow operations from blocking the entire execution.
 package main
 
@@ -10,12 +10,12 @@ import (
 	"log"
 	"time"
 
-	"protograph/pkg/protograph"
-	pb "protograph/proto/examples/lettercount"
+	"docket/pkg/docket"
+	pb "docket/proto/examples/lettercount"
 )
 
 func main() {
-	fmt.Println("=== Protograph Timeout Example ===")
+	fmt.Println("=== Docket Timeout Example ===")
 	fmt.Println()
 	fmt.Println("This example demonstrates timeout handling for steps.")
 	fmt.Println()
@@ -34,7 +34,7 @@ func main() {
 }
 
 func runFastStep() {
-	g := protograph.NewGraph()
+	g := docket.NewGraph()
 
 	err := g.Register(
 		func(ctx context.Context, input *pb.InputString) (*pb.LetterCount, error) {
@@ -53,8 +53,8 @@ func runFastStep() {
 				Count:          int32(len(input.Value)),
 			}, nil
 		},
-		protograph.WithName("FastStep"),
-		protograph.WithTimeout(200*time.Millisecond),
+		docket.WithName("FastStep"),
+		docket.WithTimeout(200*time.Millisecond),
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -67,7 +67,7 @@ func runFastStep() {
 	ctx := context.Background()
 	start := time.Now()
 
-	result, err := protograph.Execute[*pb.LetterCount](ctx, g, "timeout-001", &pb.InputString{Value: "quick"})
+	result, err := docket.Execute[*pb.LetterCount](ctx, g, "timeout-001", &pb.InputString{Value: "quick"})
 	if err != nil {
 		log.Fatalf("Execution failed: %v", err)
 	}
@@ -77,7 +77,7 @@ func runFastStep() {
 }
 
 func runSlowStep() {
-	g := protograph.NewGraph()
+	g := docket.NewGraph()
 
 	err := g.Register(
 		func(ctx context.Context, input *pb.InputString) (*pb.LetterCount, error) {
@@ -93,8 +93,8 @@ func runSlowStep() {
 				return nil, ctx.Err()
 			}
 		},
-		protograph.WithName("SlowStep"),
-		protograph.WithTimeout(100*time.Millisecond),
+		docket.WithName("SlowStep"),
+		docket.WithTimeout(100*time.Millisecond),
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -107,14 +107,14 @@ func runSlowStep() {
 	ctx := context.Background()
 	start := time.Now()
 
-	_, err = protograph.Execute[*pb.LetterCount](ctx, g, "timeout-002", &pb.InputString{Value: "slow"})
+	_, err = docket.Execute[*pb.LetterCount](ctx, g, "timeout-002", &pb.InputString{Value: "slow"})
 	if err != nil {
 		fmt.Printf("   ✗ Failed in %v: %v\n\n", time.Since(start).Round(time.Millisecond), err)
 	}
 }
 
 func runTimeoutWithRetry() {
-	g := protograph.NewGraph()
+	g := docket.NewGraph()
 	attempts := 0
 
 	err := g.Register(
@@ -142,9 +142,12 @@ func runTimeoutWithRetry() {
 				return nil, ctx.Err()
 			}
 		},
-		protograph.WithName("FlakeyStep"),
-		protograph.WithTimeout(50*time.Millisecond),
-		protograph.WithRetry(3, protograph.FixedBackoff{Delay: 10 * time.Millisecond}),
+		docket.WithName("FlakeyStep"),
+		docket.WithTimeout(50*time.Millisecond),
+		docket.WithRetry(docket.RetryConfig{
+			MaxAttempts: 3,
+			Backoff:     docket.FixedBackoff{Delay: 10 * time.Millisecond},
+		}),
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -157,7 +160,7 @@ func runTimeoutWithRetry() {
 	ctx := context.Background()
 	start := time.Now()
 
-	result, err := protograph.Execute[*pb.LetterCount](ctx, g, "timeout-003", &pb.InputString{Value: "retry-timeout"})
+	result, err := docket.Execute[*pb.LetterCount](ctx, g, "timeout-003", &pb.InputString{Value: "retry-timeout"})
 	if err != nil {
 		log.Fatalf("Execution failed: %v", err)
 	}

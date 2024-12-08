@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-	fmt.Println("Protograph - Proto-based DAG Execution Framework")
+	fmt.Println("Docket - Proto-based DAG Execution Framework")
 	fmt.Println()
 	fmt.Println("See examples/lettercount for a working example.")
 }

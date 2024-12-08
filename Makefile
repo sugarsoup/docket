@@ -1,4 +1,4 @@
-# Makefile for the protograph project
+# Makefile for the docket project
 
 .PHONY: help proto build run test run-example
 
@@ -9,7 +9,8 @@ help:
 	@echo "  make run           - Run the application"
 	@echo "  make test          - Run tests"
 	@echo "  make coverage      - Run tests and generate coverage report"
-	@echo "  make run-example   - Run a specific example (e.g., make run-example EXAMPLE=hello_world)"
+	@echo "  make example-persistence-postgres - Run the postgres persistence example (requires Docker)"
+	@echo "  make example-river               - Run the River queue integration example (requires Docker)"
 
 proto:
 	@echo "Compiling protobufs..."
@@ -18,11 +19,11 @@ proto:
 
 build:
 	@echo "Building the application..."
-	@go build -o ./build/protograph ./cmd/protograph
+	@go build -o ./build/docket ./cmd/docket
 
 run: build
 	@echo "Running the application..."
-	@./build/protograph
+	@./build/docket
 
 test:
 	@echo "Running tests..."
@@ -38,3 +39,9 @@ coverage:
 run-example:
 	@echo "Running example $(EXAMPLE)..."
 	@go run ./examples/$(EXAMPLE)
+
+example-persistence-postgres:
+	@./examples/persistence_postgres/run.sh
+
+example-river:
+	@./examples/river/run.sh

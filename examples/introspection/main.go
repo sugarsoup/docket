@@ -1,6 +1,6 @@
 // Example: Graph Introspection
 //
-// This example demonstrates how to inspect a protograph graph
+// This example demonstrates how to inspect a docket graph
 // to understand its structure, dependencies, and execution order.
 package main
 
@@ -10,12 +10,12 @@ import (
 	"log"
 	"reflect"
 
-	"protograph/pkg/protograph"
-	pb "protograph/proto/examples/parallel"
+	"docket/pkg/docket"
+	pb "docket/proto/examples/parallel"
 )
 
 func main() {
-	fmt.Println("=== Protograph Graph Introspection ===")
+	fmt.Println("=== Docket Graph Introspection ===")
 	fmt.Println()
 	fmt.Println("This example demonstrates APIs for inspecting graph structure.")
 	fmt.Println()
@@ -39,36 +39,36 @@ func main() {
 	visualizeGraph(g)
 }
 
-func buildExampleGraph() *protograph.Graph {
-	g := protograph.NewGraph()
+func buildExampleGraph() *docket.Graph {
+	g := docket.NewGraph()
 
 	// Register several steps with dependencies
 	g.Register(
 		func(ctx context.Context, userID *pb.UserID) (*pb.UserProfile, error) {
 			return &pb.UserProfile{Id: userID.Id, Name: "User"}, nil
 		},
-		protograph.WithName("FetchProfile"),
+		docket.WithName("FetchProfile"),
 	)
 
 	g.Register(
 		func(ctx context.Context, userID *pb.UserID) (*pb.UserPreferences, error) {
 			return &pb.UserPreferences{UserId: userID.Id}, nil
 		},
-		protograph.WithName("FetchPreferences"),
+		docket.WithName("FetchPreferences"),
 	)
 
 	g.Register(
 		func(ctx context.Context, userID *pb.UserID) (*pb.UserActivity, error) {
 			return &pb.UserActivity{UserId: userID.Id}, nil
 		},
-		protograph.WithName("FetchActivity"),
+		docket.WithName("FetchActivity"),
 	)
 
 	g.Register(
 		func(ctx context.Context, profile *pb.UserProfile, prefs *pb.UserPreferences, activity *pb.UserActivity) (*pb.EnrichedUser, error) {
 			return &pb.EnrichedUser{Profile: profile, Preferences: prefs, Activity: activity}, nil
 		},
-		protograph.WithName("EnrichUser"),
+		docket.WithName("EnrichUser"),
 	)
 
 	if err := g.Validate(); err != nil {
@@ -78,7 +78,7 @@ func buildExampleGraph() *protograph.Graph {
 	return g
 }
 
-func listSteps(g *protograph.Graph) {
+func listSteps(g *docket.Graph) {
 	steps := g.Steps()
 	fmt.Printf("   Found %d registered steps:\n\n", len(steps))
 
@@ -101,7 +101,7 @@ func listSteps(g *protograph.Graph) {
 	}
 }
 
-func findLeafTypes(g *protograph.Graph) {
+func findLeafTypes(g *docket.Graph) {
 	leaves := g.LeafTypes()
 	fmt.Printf("   Leaf input types (must be provided at execution):\n")
 	for _, leaf := range leaves {
@@ -113,7 +113,7 @@ func findLeafTypes(g *protograph.Graph) {
 	fmt.Println()
 }
 
-func showExecutionPlans(g *protograph.Graph) {
+func showExecutionPlans(g *docket.Graph) {
 	// Plan for EnrichedUser
 	plan1, _ := g.GetExecutionPlan(&pb.EnrichedUser{})
 	fmt.Println("   Execution plan for EnrichedUser:")
@@ -131,7 +131,7 @@ func showExecutionPlans(g *protograph.Graph) {
 	fmt.Println()
 }
 
-func visualizeGraph(g *protograph.Graph) {
+func visualizeGraph(g *docket.Graph) {
 	fmt.Println("   ASCII visualization of the dependency graph:")
 	fmt.Println()
 	fmt.Println("   ┌──────────┐")

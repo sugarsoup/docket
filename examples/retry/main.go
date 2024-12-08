@@ -1,6 +1,6 @@
 // Example: Retry with Backoff
 //
-// This example demonstrates how protograph handles transient failures
+// This example demonstrates how docket handles transient failures
 // with configurable retry logic and backoff strategies.
 package main
 
@@ -12,8 +12,8 @@ import (
 	"math/rand"
 	"time"
 
-	"protograph/pkg/protograph"
-	pb "protograph/proto/examples/lettercount"
+	"docket/pkg/docket"
+	pb "docket/proto/examples/lettercount"
 )
 
 // Simulated transient errors
@@ -23,7 +23,7 @@ var (
 )
 
 func main() {
-	fmt.Println("=== Protograph Retry Example ===")
+	fmt.Println("=== Docket Retry Example ===")
 	fmt.Println()
 	fmt.Println("This example demonstrates retry with backoff strategies.")
 	fmt.Println()
@@ -42,7 +42,7 @@ func main() {
 }
 
 func runWithFixedBackoff() {
-	g := protograph.NewGraph()
+	g := docket.NewGraph()
 	attempts := 0
 
 	err := g.Register(
@@ -60,8 +60,11 @@ func runWithFixedBackoff() {
 				Count:          int32(len(input.Value)),
 			}, nil
 		},
-		protograph.WithName("UnreliableStep"),
-		protograph.WithRetry(5, protograph.FixedBackoff{Delay: 100 * time.Millisecond}),
+		docket.WithName("UnreliableStep"),
+		docket.WithRetry(docket.RetryConfig{
+			MaxAttempts: 5,
+			Backoff:     docket.FixedBackoff{Delay: 100 * time.Millisecond},
+		}),
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -74,7 +77,7 @@ func runWithFixedBackoff() {
 	ctx := context.Background()
 	start := time.Now()
 
-	result, err := protograph.Execute[*pb.LetterCount](ctx, g, "fixed-backoff-001", &pb.InputString{Value: "hello"})
+	result, err := docket.Execute[*pb.LetterCount](ctx, g, "fixed-backoff-001", &pb.InputString{Value: "hello"})
 	if err != nil {
 		log.Fatalf("Execution failed: %v", err)
 	}
@@ -87,7 +90,7 @@ func runWithFixedBackoff() {
 }
 
 func runWithExponentialBackoff() {
-	g := protograph.NewGraph()
+	g := docket.NewGraph()
 	attempts := 0
 	lastAttemptTime := time.Now()
 
@@ -113,11 +116,14 @@ func runWithExponentialBackoff() {
 				Count:          int32(len(input.Value)),
 			}, nil
 		},
-		protograph.WithName("RateLimitedStep"),
-		protograph.WithRetry(5, protograph.ExponentialBackoff{
-			Initial: 100 * time.Millisecond,
-			Factor:  2.0,
-			Max:     2 * time.Second,
+		docket.WithName("RateLimitedStep"),
+		docket.WithRetry(docket.RetryConfig{
+			MaxAttempts: 5,
+			Backoff: docket.ExponentialBackoff{
+				InitialDelay: 100 * time.Millisecond,
+				Factor:       2.0,
+				MaxDelay:     2 * time.Second,
+			},
 		}),
 	)
 	if err != nil {
@@ -131,7 +137,7 @@ func runWithExponentialBackoff() {
 	ctx := context.Background()
 	start := time.Now()
 
-	result, err := protograph.Execute[*pb.LetterCount](ctx, g, "exp-backoff-001", &pb.InputString{Value: "world"})
+	result, err := docket.Execute[*pb.LetterCount](ctx, g, "exp-backoff-001", &pb.InputString{Value: "world"})
 	if err != nil {
 		log.Fatalf("Execution failed: %v", err)
 	}
@@ -141,7 +147,7 @@ func runWithExponentialBackoff() {
 }
 
 func runWithSelectiveRetry() {
-	g := protograph.NewGraph()
+	g := docket.NewGraph()
 	attempts := 0
 
 	// Only retry on specific error types
@@ -170,9 +176,12 @@ func runWithSelectiveRetry() {
 				Count:          int32(len(input.Value)),
 			}, nil
 		},
-		protograph.WithName("SelectiveRetryStep"),
-		protograph.WithRetry(5, protograph.FixedBackoff{Delay: 50 * time.Millisecond}),
-		protograph.WithRetryOn(isRetriable),
+		docket.WithName("SelectiveRetryStep"),
+		docket.WithRetry(docket.RetryConfig{
+			MaxAttempts: 5,
+			Backoff:     docket.FixedBackoff{Delay: 50 * time.Millisecond},
+		}),
+		docket.WithErrorClassifier(isRetriable),
 	)
 	if err != nil {
 		log.Fatal(err)
@@ -184,7 +193,7 @@ func runWithSelectiveRetry() {
 
 	ctx := context.Background()
 
-	result, err := protograph.Execute[*pb.LetterCount](ctx, g, "selective-retry-001", &pb.InputString{Value: "retry"})
+	result, err := docket.Execute[*pb.LetterCount](ctx, g, "selective-retry-001", &pb.InputString{Value: "retry"})
 	if err != nil {
 		log.Fatalf("Execution failed: %v", err)
 	}
@@ -193,8 +202,8 @@ func runWithSelectiveRetry() {
 	fmt.Printf("   Result: %q has %d characters\n\n", result.OriginalString, result.Count)
 
 	fmt.Println("💡 Key Points:")
-	fmt.Println("   • WithRetry(maxAttempts, backoffStrategy) configures retry behavior")
+	fmt.Println("   • WithRetry(RetryConfig{MaxAttempts, Backoff}) configures retry behavior")
 	fmt.Println("   • FixedBackoff: constant delay between retries")
 	fmt.Println("   • ExponentialBackoff: increasing delays (100ms → 200ms → 400ms...)")
-	fmt.Println("   • WithRetryOn(classifier) selectively retries based on error type")
+	fmt.Println("   • WithErrorClassifier(fn) selectively retries based on error type")
 }

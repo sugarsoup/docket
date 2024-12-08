@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 
-	pb "protograph/proto/examples/batch"
+	pb "docket/proto/examples/batch"
 )
 
 // ComputeBatchStats is an aggregate step (fan-in) that computes statistics
@@ -67,4 +67,3 @@ func EnrichMovie(ctx context.Context, movie *pb.Movie, stats *pb.BatchStats) (*p
 		RatingPercentile:    percentile,
 	}, nil
 }
-

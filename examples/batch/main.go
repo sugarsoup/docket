@@ -7,12 +7,12 @@ import (
 	"sort"
 	"time"
 
-	"protograph/pkg/protograph"
-	pb "protograph/proto/examples/batch"
+	"docket/pkg/docket"
+	pb "docket/proto/examples/batch"
 )
 
 func main() {
-	fmt.Println("=== Protograph Fan-In/Aggregate Example ===")
+	fmt.Println("=== Docket Fan-In/Aggregate Example ===")
 	fmt.Println()
 	fmt.Println("This example demonstrates the fan-in pattern where:")
 	fmt.Println("  1. An AGGREGATE step processes all items to compute statistics")
@@ -21,12 +21,12 @@ func main() {
 
 	// ============ SETUP PHASE ============
 
-	g := protograph.NewGraph()
+	g := docket.NewGraph()
 
 	// Register the aggregate step (fan-in) using a named function
 	err := g.RegisterAggregate(
 		ComputeBatchStats, // Named function from steps.go
-		protograph.WithName("ComputeBatchStats"),
+		docket.WithName("ComputeBatchStats"),
 	)
 	if err != nil {
 		log.Fatalf("Failed to register ComputeBatchStats: %v", err)
@@ -35,7 +35,7 @@ func main() {
 	// Register the per-item step using a named function
 	err = g.Register(
 		EnrichMovie, // Named function from steps.go
-		protograph.WithName("EnrichMovie"),
+		docket.WithName("EnrichMovie"),
 	)
 	if err != nil {
 		log.Fatalf("Failed to register EnrichMovie: %v", err)
@@ -69,7 +69,7 @@ func main() {
 	fmt.Println("⚙️  Executing batch pipeline...")
 	startTime := time.Now()
 
-	results, err := protograph.ExecuteBatch[*pb.Movie, *pb.EnrichedMovie](
+	results, err := docket.ExecuteBatch[*pb.Movie, *pb.EnrichedMovie](
 		ctx, g, "batch-001", movies,
 	)
 	if err != nil {

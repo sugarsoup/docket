@@ -5,16 +5,16 @@ import (
 	"reflect"
 	"testing"
 
-	"protograph/pkg/protograph"
-	pb "protograph/proto/examples/parallel"
+	"docket/pkg/docket"
+	pb "docket/proto/examples/parallel"
 )
 
 func TestIntrospectionLogic(t *testing.T) {
-	g := protograph.NewGraph()
+	g := docket.NewGraph()
 
 	g.Register(
 		func(ctx context.Context, id *pb.UserID) (*pb.UserProfile, error) { return nil, nil },
-		protograph.WithName("ProfileStep"),
+		docket.WithName("ProfileStep"),
 	)
 
 	if err := g.Validate(); err != nil {

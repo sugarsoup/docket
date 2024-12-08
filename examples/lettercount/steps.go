@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	pb "protograph/proto/examples/lettercount"
+	pb "docket/proto/examples/lettercount"
 )
 
 // CountLetterR counts occurrences of the letter 'r' in an input string.
@@ -31,4 +31,3 @@ func CountLetterRPlain(input *pb.InputString) *pb.LetterCount {
 		Count:          int32(count),
 	}
 }
-
