@@ -36,7 +36,7 @@ type SQLStore struct {
 // The user is responsible for opening the *sql.DB with their preferred driver.
 func NewSQLStore(db *sql.DB, tableName string, dialect SQLDialect) *SQLStore {
 	if tableName == "" {
-		tableName = "protograph_store"
+		tableName = "docket_store"
 	}
 	return &SQLStore{
 		db:        db,

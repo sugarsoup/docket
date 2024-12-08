@@ -14,12 +14,10 @@ import (
 )
 
 func main() {
-	// 1. Setup Postgres Store
+	// 1. Setup Postgres Connection
 	connStr := os.Getenv("DATABASE_URL")
 	if connStr == "" {
-		connStr = "postgres://postgres:postgres@localhost:5432/protograph_example?sslmode=disable"
-		fmt.Println("No DATABASE_URL set, using default:", connStr)
-		fmt.Println("(Ensure you have a running Postgres instance: docker run -p 5432:5432 -e POSTGRES_PASSWORD=postgres postgres)")
+		connStr = "postgres://postgres:postgres@localhost:5432/docket_example?sslmode=disable"
 	}
 
 	pool, err := pgxpool.New(context.Background(), connStr)

@@ -2,7 +2,7 @@
 set -e
 
 CONTAINER_NAME="docket-pg-example"
-DB_NAME="protograph_example"
+DB_NAME="docket_example"
 DB_USER="postgres"
 DB_PASS="postgres"
 DB_PORT="5432"

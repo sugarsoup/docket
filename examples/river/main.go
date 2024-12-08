@@ -57,7 +57,7 @@ func run() error {
 	defer pool.Close()
 
 	// 2. Setup Docket with Postgres persistence
-	store := docket.NewPostgresStore(pool, "protograph_cache")
+	store := docket.NewPostgresStore(pool, "docket_cache")
 	if err := store.InitSchema(ctx); err != nil {
 		return fmt.Errorf("failed to init docket schema: %w", err)
 	}

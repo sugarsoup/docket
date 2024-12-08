@@ -25,7 +25,7 @@ type PostgresStore struct {
 // NewPostgresStore creates a new Postgres-backed store.
 func NewPostgresStore(pool *pgxpool.Pool, tableName string) *PostgresStore {
 	if tableName == "" {
-		tableName = "protograph_store"
+		tableName = "docket_store"
 	}
 	return &PostgresStore{
 		pool:      pool,

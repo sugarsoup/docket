@@ -412,8 +412,8 @@ func (e *executor) isRetriable(err error, classifier func(error) bool) bool {
 type contextKey string
 
 const (
-	executionIDKey contextKey = "protograph_execution_id"
-	stepNameKey    contextKey = "protograph_step_name"
+	executionIDKey contextKey = "docket_execution_id"
+	stepNameKey    contextKey = "docket_step_name"
 )
 
 func withExecutionID(ctx context.Context, id string) context.Context {
