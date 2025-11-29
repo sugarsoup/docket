@@ -1,0 +1,6 @@
+docs/
+CLAUDE.md
+coverage.html
+coverage.out
+*.test
+build/

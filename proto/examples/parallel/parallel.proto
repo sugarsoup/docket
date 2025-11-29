@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package protograph.examples.parallel;
+
+option go_package = "protograph/proto/examples/parallel";
+
+// UserID is the leaf input - a user to look up
+message UserID {
+  string id = 1;
+}
+
+// UserProfile from the user service
+message UserProfile {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+}
+
+// UserPreferences from the preferences service
+message UserPreferences {
+  string user_id = 1;
+  string theme = 2;
+  string language = 3;
+}
+
+// UserActivity from the analytics service
+message UserActivity {
+  string user_id = 1;
+  int32 login_count = 2;
+  int64 last_login_timestamp = 3;
+}
+
+// EnrichedUser combines data from all three services
+message EnrichedUser {
+  UserProfile profile = 1;
+  UserPreferences preferences = 2;
+  UserActivity activity = 3;
+}
+

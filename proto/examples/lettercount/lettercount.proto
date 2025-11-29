@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package protograph.examples.lettercount;
+
+option go_package = "protograph/proto/examples/lettercount";
+
+// InputString is a leaf input proto containing the string to analyze
+message InputString {
+  string value = 1;
+}
+
+// LetterCount is the output proto containing the count of letter 'r'
+message LetterCount {
+  string original_string = 1;
+  string target_letter = 2;
+  int32 count = 3;
+}

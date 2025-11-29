@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package protograph.examples.batch;
+
+option go_package = "protograph/proto/examples/batch";
+
+// Movie represents a single movie in the batch
+message Movie {
+  string id = 1;
+  string title = 2;
+  int32 year = 3;
+  int32 runtime_minutes = 4;
+  double rating = 5;
+  string genre = 6;
+}
+
+// EnrichedMovie adds computed fields relative to the batch
+message EnrichedMovie {
+  Movie original = 1;
+  bool above_average_rating = 2;   // rating > batch average
+  bool above_average_runtime = 3;  // runtime > batch average
+  double rating_percentile = 4;    // where this movie ranks (0-100)
+}
+
+// BatchStats contains aggregate statistics computed across all movies (fan-in)
+message BatchStats {
+  int32 count = 1;
+  double average_rating = 2;
+  double average_runtime = 3;
+  double max_rating = 4;
+  double min_rating = 5;
+  int32 total_runtime = 6;
+}
