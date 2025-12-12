@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 	"sync/atomic"
 	"time"
 
@@ -38,7 +39,7 @@ func ComputeWithGlobalScope(ctx context.Context, input *pb.InputString) (*pb.Let
 	}, nil
 }
 
-func runWorkflowScope(store docket.PersistenceStore, input *pb.InputString, executionNum int) error {
+func runWorkflowScope(store docket.Store, input *pb.InputString, executionNum int) error {
 	fmt.Printf("\n  Execution #%d (Workflow Scope)\n", executionNum)
 
 	graph := docket.NewGraph()
@@ -61,7 +62,7 @@ func runWorkflowScope(store docket.PersistenceStore, input *pb.InputString, exec
 	return nil
 }
 
-func runGlobalScope(store docket.PersistenceStore, input *pb.InputString, executionNum int) error {
+func runGlobalScope(store docket.Store, input *pb.InputString, executionNum int) error {
 	fmt.Printf("\n  Execution #%d (Global Scope)\n", executionNum)
 
 	graph := docket.NewGraph()
@@ -85,9 +86,11 @@ func runGlobalScope(store docket.PersistenceStore, input *pb.InputString, execut
 }
 
 func main() {
-	fmt.Println("=== Persistence Scope Comparison ===\n")
+	fmt.Println("=== Persistence Scope Comparison ===")
+	fmt.Println()
 	fmt.Println("This example demonstrates the difference between ScopeWorkflow")
-	fmt.Println("and ScopeGlobal persistence scopes.\n")
+	fmt.Println("and ScopeGlobal persistence scopes.")
+	fmt.Println()
 
 	// Test input
 	input := &pb.InputString{Value: "Alice"}
@@ -125,11 +128,11 @@ func main() {
 	fmt.Printf("\nGlobal Scope Executions: %d (expected: 1)\n", globalScopeExecutions.Load())
 
 	// Summary for Part 1
-	fmt.Println("\n" + string('─')*60)
+	fmt.Println("\n" + strings.Repeat("─", 60))
 	fmt.Println("COMPARISON:")
 	fmt.Printf("  ScopeWorkflow: %d executions (no cross-execution caching)\n", workflowScopeExecutions.Load())
 	fmt.Printf("  ScopeGlobal:   %d execution  (cached across executions)\n", globalScopeExecutions.Load())
-	fmt.Println(string('─') * 60)
+	fmt.Println(strings.Repeat("─", 60))
 
 	// Part 2: Within-execution deduplication
 	fmt.Println("\n\n═══════════════════════════════════════════════════════════")

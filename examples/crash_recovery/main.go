@@ -57,7 +57,7 @@ func EnrichData(ctx context.Context, processed *pb.LetterCount) (*pb.LetterCount
 	}, nil
 }
 
-func runExecution(attemptNum int, store docket.PersistenceStore, failStep2 bool, input *pb.InputString) error {
+func runExecution(attemptNum int, store docket.Store, failStep2 bool, input *pb.InputString) error {
 	fmt.Printf("\n=== Attempt #%d ===\n", attemptNum)
 	shouldFailStep2.Store(failStep2)
 
@@ -104,10 +104,12 @@ func runExecution(attemptNum int, store docket.PersistenceStore, failStep2 bool,
 }
 
 func main() {
-	fmt.Println("=== Crash Recovery Example ===\n")
+	fmt.Println("=== Crash Recovery Example ===")
+	fmt.Println()
 	fmt.Println("This example demonstrates how Docket's persistence enables")
 	fmt.Println("crash recovery. When a step fails, previously completed steps")
-	fmt.Println("are restored from checkpoints on retry.\n")
+	fmt.Println("are restored from checkpoints on retry.")
+	fmt.Println()
 
 	// Create shared persistence store
 	store := docket.NewInMemoryStore()

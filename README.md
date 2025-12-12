@@ -2,6 +2,8 @@
 
 **Docket** is a typed execution graph for Go. You write functions with typed inputs and outputs—Docket infers the dependency graph, runs independent steps in parallel, and caches what you tell it to.
 
+**[Full Documentation](https://deepwiki.com/sugarsoup/docket)** | **[Examples](examples/)** | **[API Reference](https://deepwiki.com/sugarsoup/docket)**
+
 ```go
 func FetchProfile(ctx context.Context, id *pb.UserID) (*pb.UserProfile, error)
 func FetchPrefs(ctx context.Context, id *pb.UserID) (*pb.UserPreferences, error)
@@ -293,7 +295,7 @@ g := docket.NewGraph(
 
 ## Examples
 
-Working examples in the `examples/` directory:
+Working examples in the `examples/` directory. See the [full documentation](https://deepwiki.com/sugarsoup/docket) for detailed walkthroughs.
 
 | Example | Description |
 |---------|-------------|
@@ -313,6 +315,8 @@ Working examples in the `examples/` directory:
 | [persistence_redis](examples/persistence_redis) | Redis backend |
 
 ## When to Use Docket
+
+See [Architecture & Design](https://deepwiki.com/sugarsoup/docket) for deeper discussion of trade-offs.
 
 **Good fits:**
 - Microservice aggregation (fan-out to multiple services, combine results)
@@ -337,6 +341,12 @@ make proto
 # Test
 make test
 ```
+
+## Learn More
+
+- **[Full Documentation](https://deepwiki.com/sugarsoup/docket)** — architecture, advanced patterns, API reference
+- **[Examples](examples/)** — working code for common use cases
+- **[pitch.md](pitch.md)** — detailed rationale and comparison with other approaches
 
 ## License
 

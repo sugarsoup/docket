@@ -24,11 +24,13 @@ func main() {
 }
 
 func run() error {
-	fmt.Println("=== Docket Observability Example ===\n")
+	fmt.Println("=== Docket Observability Example ===")
+	fmt.Println()
 	fmt.Println("This example demonstrates multiple observability patterns:")
 	fmt.Println("1. Prometheus metrics")
 	fmt.Println("2. Structured logging (slog)")
-	fmt.Println("3. Multiple observers combined\n")
+	fmt.Println("3. Multiple observers combined")
+	fmt.Println()
 
 	// Setup structured logging
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{

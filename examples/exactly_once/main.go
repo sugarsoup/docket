@@ -32,10 +32,12 @@ func ExpensiveComputation(ctx context.Context, input *pb.InputString) (*pb.Lette
 }
 
 func main() {
-	fmt.Println("=== Exactly-Once Semantics Demo ===\n")
+	fmt.Println("=== Exactly-Once Semantics Demo ===")
+	fmt.Println()
 	fmt.Println("This example demonstrates that with ScopeGlobal persistence,")
 	fmt.Println("a step executes exactly once for the same inputs, even across")
-	fmt.Println("multiple independent executions.\n")
+	fmt.Println("multiple independent executions.")
+	fmt.Println()
 
 	// Create an in-memory persistence store
 	store := docket.NewInMemoryStore()
@@ -44,7 +46,8 @@ func main() {
 	input := &pb.InputString{Value: "Alice"}
 
 	fmt.Println("--- First Execution ---")
-	fmt.Println("Expected: Step will execute (cache miss)\n")
+	fmt.Println("Expected: Step will execute (cache miss)")
+	fmt.Println()
 
 	// Create the first graph with ScopeGlobal persistence
 	graph1 := docket.NewGraph()
@@ -66,7 +69,8 @@ func main() {
 	fmt.Printf("Execution count: %d\n\n", executionCounter.Load())
 
 	fmt.Println("--- Second Execution (Same Input) ---")
-	fmt.Println("Expected: Step will NOT execute (cache hit - exactly once guarantee)\n")
+	fmt.Println("Expected: Step will NOT execute (cache hit - exactly once guarantee)")
+	fmt.Println()
 
 	// Create a NEW graph instance to simulate a fresh execution
 	graph2 := docket.NewGraph()
@@ -95,7 +99,8 @@ func main() {
 	}
 
 	fmt.Println("\n--- Third Execution (Different Input) ---")
-	fmt.Println("Expected: Step WILL execute (different inputs = different cache key)\n")
+	fmt.Println("Expected: Step WILL execute (different inputs = different cache key)")
+	fmt.Println()
 
 	differentInput := &pb.InputString{Value: "Bob"}
 
